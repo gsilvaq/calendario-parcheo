@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendario de Parcheo Windows 2026 - UTP</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',Tahoma,Geneva,sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh;}
+
+/* ── HEADER ── */
+header{
+  background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 45%,#7c3aed 100%);
+  padding:32px 48px 28px;color:white;
+  box-shadow:0 6px 30px rgba(37,99,235,0.4);
+  position:relative;overflow:hidden;
+}
+header::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:300px;height:300px;border-radius:50%;
+  background:rgba(255,255,255,0.05);
+}
+header::after{
+  content:'';position:absolute;bottom:-80px;left:30%;
+  width:200px;height:200px;border-radius:50%;
+  background:rgba(255,255,255,0.04);
+}
+header h1{font-size:1.9rem;font-weight:900;letter-spacing:-0.5px;text-shadow:0 2px 8px rgba(0,0,0,0.2);}
+header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
+
+/* ── LAYOUT ── */
+.container{max-width:1400px;margin:0 auto;padding:32px 24px;}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.stat{
+  background:white;border-radius:16px;padding:20px 22px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.07);
+  display:flex;align-items:center;gap:14px;border-top:4px solid;
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.stat:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.12);}
+.stat.s1{border-color:#2563eb;}.stat.s2{border-color:#10b981;}
+.stat.s3{border-color:#f59e0b;}.stat.s4{border-color:#8b5cf6;}
+.stat-icon{font-size:2.2rem;}
+.stat-num{font-size:2rem;font-weight:900;line-height:1;}
+.stat-lbl{font-size:0.72rem;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;margin-top:3px;}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:6px;margin-bottom:24px;background:white;padding:6px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,0.07);width:fit-content;}
+.tab{padding:10px 22px;border-radius:9px;cursor:pointer;font-size:0.88rem;font-weight:700;color:#6b7280;transition:all 0.25s;border:none;background:transparent;}
+.tab:hover{background:#f3f4f6;color:#374151;}
+.tab.active{background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;box-shadow:0 3px 10px rgba(37,99,235,0.35);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* ── LEGEND ── */
+.legend{
+  background:white;border-radius:14px;padding:16px 22px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.07);margin-bottom:24px;
+  display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+}
+.legend-title{font-size:0.8rem;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.05em;}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:0.82rem;color:#4b5563;font-weight:500;}
+.dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.dot-red{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,0.2);}
+.dot-blue{background:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.2);}
+.dot-yellow{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,0.2);}
+.dot-green{background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,0.2);}
+
+/* ── YEAR CALENDAR GRID ── */
+.cal-year{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+@media(max-width:1100px){.cal-year{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:750px){.cal-year{grid-template-columns:repeat(2,1fr);}}
+
+.month-card{
+  background:white;border-radius:16px;overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,0.08);
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.month-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.13);}
+.month-card.done{border-left:4px solid #10b981;}
+.month-card.pending{border-left:4px solid #3b82f6;}
+
+.month-header{
+  padding:12px 14px;font-size:0.95rem;font-weight:800;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.month-card.done .month-header{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;}
+.month-card.pending .month-header{background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1e40af;}
+.month-status-badge{font-size:0.68rem;font-weight:700;padding:2px 9px;border-radius:99px;}
+.month-card.done .month-status-badge{background:rgba(16,185,129,0.25);color:#065f46;}
+.month-card.pending .month-status-badge{background:rgba(59,130,246,0.25);color:#1e40af;}
+
+/* ── MINI CALENDAR GRID ── */
+.mini-cal{padding:10px 10px 12px;}
+.day-names{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  gap:2px;margin-bottom:4px;
+}
+.day-name{
+  text-align:center;font-size:0.64rem;font-weight:700;
+  color:#9ca3af;text-transform:uppercase;padding:2px 0;
+}
+.day-name.weekend{color:#cbd5e1;}
+.days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+
+.day-cell{
+  position:relative;min-height:32px;border-radius:7px;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-start;padding:3px 2px 4px;
+  cursor:default;transition:background 0.15s;
+}
+.day-cell:not(.empty):hover{background:#f1f5f9;}
+.day-cell.empty{pointer-events:none;}
+.day-cell.has-event{cursor:pointer;}
+.day-cell.has-event:hover{background:#eff6ff;box-shadow:0 0 0 1.5px #bfdbfe;}
+
+.day-num{
+  font-size:0.76rem;font-weight:600;color:#374151;
+  line-height:1.3;
+}
+.day-cell.today .day-num{
+  background:#2563eb;color:white;
+  border-radius:50%;width:20px;height:20px;
+  display:flex;align-items:center;justify-content:center;font-size:0.7rem;
+}
+.day-cell.weekend-day .day-num{color:#94a3b8;}
+
+.dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-top:2px;}
+.ev-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.ev-dot.red{background:#ef4444;}
+.ev-dot.blue{background:#3b82f6;}
+.ev-dot.yellow{background:#f59e0b;}
+.ev-dot.green{background:#10b981;}
+
+/* ── MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(15,23,42,0.55);backdrop-filter:blur(3px);
+  z-index:1000;align-items:center;justify-content:center;
+  animation:fadeIn 0.2s ease;
+}
+.modal-overlay.open{display:flex;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+.modal{
+  background:white;border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);
+  width:520px;max-width:94vw;max-height:88vh;
+  overflow-y:auto;animation:slideUp 0.25s ease;
+}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+
+.modal-header{
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  padding:22px 26px;border-radius:20px 20px 0 0;
+  display:flex;justify-content:space-between;align-items:flex-start;
+}
+.modal-header h2{color:white;font-size:1.15rem;font-weight:800;}
+.modal-header p{color:rgba(255,255,255,0.8);font-size:0.82rem;margin-top:3px;}
+.modal-close{
+  background:rgba(255,255,255,0.2);border:none;color:white;
+  width:30px;height:30px;border-radius:50%;cursor:pointer;
+  font-size:1rem;display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s;flex-shrink:0;
+}
+.modal-close:hover{background:rgba(255,255,255,0.35);}
+.modal-body{padding:22px 26px;}
+
+.ev-row{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:12px 14px;border-radius:12px;margin-bottom:10px;
+}
+.ev-row.r-pt   {background:#fff1f2;border-left:3px solid #ef4444;}
+.ev-row.r-patch{background:#eff6ff;border-left:3px solid #3b82f6;}
+.ev-row.r-reboot{background:#fffbeb;border-left:3px solid #f59e0b;}
+.ev-row.r-report{background:#f0fdf4;border-left:3px solid #10b981;}
+.ev-row-icon{font-size:1.3rem;}
+.ev-row-info{}
+.ev-row-name{font-size:0.9rem;font-weight:700;color:#111827;}
+.ev-row-desc{font-size:0.78rem;color:#6b7280;margin-top:2px;}
+.ev-row-time{font-size:0.75rem;font-weight:600;color:#374151;margin-top:3px;}
+
+.cmd-section{margin-top:16px;}
+.cmd-section h4{font-size:0.82rem;font-weight:700;color:#374151;margin-bottom:10px;
+  padding-bottom:8px;border-bottom:1px solid #f3f4f6;}
+.cmd-block{
+  background:#1e293b;border-radius:10px;padding:12px 14px;
+  margin-bottom:8px;position:relative;
+}
+.cmd-label{font-size:0.67rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px;}
+.cmd-text{
+  font-family:'Cascadia Code','Consolas','Courier New',monospace;
+  font-size:0.78rem;color:#4ade80;white-space:pre-wrap;word-break:break-all;
+  padding-right:52px;
+}
+.copy-btn{
+  position:absolute;top:8px;right:8px;
+  background:#334155;border:none;color:#94a3b8;
+  padding:4px 10px;border-radius:6px;cursor:pointer;
+  font-size:0.7rem;font-weight:600;transition:all 0.2s;
+}
+.copy-btn:hover{background:#2563eb;color:white;}
+
+/* ── COMMANDS TAB ── */
+.cmd-page{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:800px){.cmd-page{grid-template-columns:1fr;}}
+.cmd-card{background:white;border-radius:16px;padding:22px 24px;box-shadow:0 2px 10px rgba(0,0,0,0.07);}
+.cmd-card h3{font-size:1rem;font-weight:800;color:#1f2937;margin-bottom:4px;}
+.cmd-card p{font-size:0.8rem;color:#6b7280;margin-bottom:16px;}
+.cmd-card .cmd-block{margin-bottom:10px;}
+.cmd-card .cmd-block:last-child{margin-bottom:0;}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap{background:white;border-radius:14px;padding:20px 24px;box-shadow:0 2px 10px rgba(0,0,0,0.07);margin-bottom:24px;}
+.progress-wrap h3{font-size:0.88rem;font-weight:700;color:#374151;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.04em;}
+.pb-row{margin-bottom:10px;}
+.pb-labels{display:flex;justify-content:space-between;font-size:0.78rem;color:#6b7280;margin-bottom:5px;}
+.pb-labels span:last-child{font-weight:700;color:#374151;}
+.pb{height:9px;background:#e5e7eb;border-radius:99px;overflow:hidden;}
+.pb-fill{height:100%;border-radius:99px;transition:width 1.4s cubic-bezier(.4,0,.2,1);}
+.pb-blue{background:linear-gradient(90deg,#60a5fa,#2563eb);}
+.pb-green{background:linear-gradient(90deg,#34d399,#059669);}
+</style>
+</head>
+<body>
+<header>
+  <h1>🗓️ Calendario de Parcheo Windows 2026 — UTP</h1>
+  <p>Servidores Desarrollo — Lima (Santiago) &nbsp;|&nbsp; Ansible Automation &nbsp;|&nbsp; Patch Tuesday + 7 días</p>
+</header>
+<div class="container">
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat s1"><span class="stat-icon">📅</span><div><div class="stat-num">12</div><div class="stat-lbl">Meses Programados</div></div></div>
+    <div class="stat s2"><span class="stat-icon">✅</span><div><div class="stat-num" id="stat-done">6</div><div class="stat-lbl">Completados</div></div></div>
+    <div class="stat s3"><span class="stat-icon">⏳</span><div><div class="stat-num" id="stat-pend">6</div><div class="stat-lbl">Pendientes</div></div></div>
+    <div class="stat s4"><span class="stat-icon">🖥️</span><div><div class="stat-num">28</div><div class="stat-lbl">Servidores</div></div></div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <h3>📊 Progreso Anual 2026</h3>
+    <div class="pb-row">
+      <div class="pb-labels"><span>Meses parcheados</span><span id="pb-months-lbl">6 / 12 — 50%</span></div>
+      <div class="pb"><div class="pb-fill pb-green" id="pb-months" style="width:50%"></div></div>
+    </div>
+    <div class="pb-row">
+      <div class="pb-labels"><span>Avance calendario (Junio 2026)</span><span>50%</span></div>
+      <div class="pb"><div class="pb-fill pb-blue" style="width:50%"></div></div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('calendario',this)">📅 Calendario 2026</button>
+    <button class="tab" onclick="showTab('comandos',this)">💻 Comandos</button>
+  </div>
+
+  <!-- TAB: Calendario -->
+  <div id="tab-calendario" class="tab-content active">
+    <!-- Legend -->
+    <div class="legend">
+      <span class="legend-title">Leyenda:</span>
+      <span class="legend-item"><span class="dot dot-red"></span> Patch Tuesday (Microsoft)</span>
+      <span class="legend-item"><span class="dot dot-blue"></span> Día de Parcheo (18:00)</span>
+      <span class="legend-item"><span class="dot dot-yellow"></span> Reinicio Controlado (23:00)</span>
+      <span class="legend-item"><span class="dot dot-green"></span> Generación de Reporte (01:00)</span>
+      <span class="legend-item"><span style="display:inline-block;width:14px;height:14px;background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:3px;"></span> Mes completado</span>
+      <span class="legend-item"><span style="display:inline-block;width:14px;height:14px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:3px;"></span> Mes pendiente</span>
+    </div>
+    <div class="cal-year" id="cal-year"></div>
+  </div>
+
+  <!-- TAB: Comandos -->
+  <div id="tab-comandos" class="tab-content">
+    <div class="cmd-page" id="cmd-page"></div>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-header">
+      <div>
+        <h2 id="modal-title">Eventos del día</h2>
+        <p id="modal-sub"></p>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────
+const MONTHS = [
+  {name:'Enero',   abbr:'Ene', m:1,  pt:13, patch:20, status:'done'},
+  {name:'Febrero', abbr:'Feb', m:2,  pt:10, patch:17, status:'done'},
+  {name:'Marzo',   abbr:'Mar', m:3,  pt:10, patch:17, status:'done'},
+  {name:'Abril',   abbr:'Abr', m:4,  pt:14, patch:21, status:'done'},
+  {name:'Mayo',    abbr:'May', m:5,  pt:12, patch:19, status:'done'},
+  {name:'Junio',   abbr:'Jun', m:6,  pt:9,  patch:16, status:'done'},
+  {name:'Julio',   abbr:'Jul', m:7,  pt:14, patch:21, status:'pending'},
+  {name:'Agosto',  abbr:'Ago', m:8,  pt:11, patch:18, status:'pending'},
+  {name:'Septiembre',abbr:'Sep',m:9, pt:8,  patch:15, status:'pending'},
+  {name:'Octubre', abbr:'Oct', m:10, pt:13, patch:20, status:'pending'},
+  {name:'Noviembre',abbr:'Nov',m:11, pt:10, patch:17, status:'pending'},
+  {name:'Diciembre',abbr:'Dic',m:12, pt:8,  patch:15, status:'pending'},
+];
+
+// ── PERSISTENCIA EN LOCALSTORAGE ──────────────────────────────────────
+function loadStatus() {
+  const saved = localStorage.getItem('utp_patch_2026');
+  if (saved) {
+    const data = JSON.parse(saved);
+    MONTHS.forEach(m => {
+      if (data[m.m] !== undefined) m.status = data[m.m];
+    });
+  }
+}
+
+function saveStatus() {
+  const data = {};
+  MONTHS.forEach(m => data[m.m] = m.status);
+  localStorage.setItem('utp_patch_2026', JSON.stringify(data));
+}
+
+function toggleMonth(mNum) {
+  const mo = MONTHS.find(x => x.m === mNum);
+  mo.status = mo.status === 'done' ? 'pending' : 'done';
+  saveStatus();
+  rebuildAll();
+}
+
+function rebuildAll() {
+  document.getElementById('cal-year').innerHTML = '';
+  buildCalendar();
+  updateStats();
+}
+
+function updateStats() {
+  const done = MONTHS.filter(m => m.status === 'done').length;
+  const pend = MONTHS.filter(m => m.status === 'pending').length;
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-pend').textContent = pend;
+  const pct = Math.round((done / 12) * 100);
+  document.getElementById('pb-months').style.width = pct + '%';
+  document.getElementById('pb-months-lbl').textContent = done + ' / 12 — ' + pct + '%';
+}
+const DOW_NAMES = ['L','M','X','J','V','S','D'];
+const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                        'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+// Returns day-of-week Mon=0..Sun=6 for a given date
+function dow(y,m,d){ const v=new Date(y,m-1,d).getDay(); return v===0?6:v-1; }
+// Days in month
+function dim(y,m){ return new Date(y,m,0).getDate(); }
+
+// ── BUILD CALENDAR ────────────────────────────────────────────────────
+function buildCalendar(){
+  const grid = document.getElementById('cal-year');
+  MONTHS.forEach(mo => {
+    const days  = dim(2026, mo.m);
+    const start = dow(2026, mo.m, 1); // 0=Mon
+    const isDone = mo.status==='done';
+
+    let cellsHTML = '';
+    // empty cells before day 1
+    for(let i=0;i<start;i++) cellsHTML+=`<div class="day-cell empty"></div>`;
+
+    for(let d=1;d<=days;d++){
+      const dw = (start+d-1)%7;
+      const isWeekend = dw>=5;
+      const isPT    = d===mo.pt;
+      const isPatch = d===mo.patch;
+      const dots    = [];
+      if(isPT)    dots.push('<span class="ev-dot red"></span>');
+      if(isPatch){
+        dots.push('<span class="ev-dot blue"></span>');
+        dots.push('<span class="ev-dot yellow"></span>');
+        dots.push('<span class="ev-dot green"></span>');
+      }
+      const hasEv = isPT||isPatch;
+      const cls = [
+        'day-cell',
+        isWeekend?'weekend-day':'',
+        hasEv?'has-event':'',
+      ].filter(Boolean).join(' ');
+
+      const clickAttr = hasEv
+        ? `onclick="openModal(${mo.m},${d},${isPT?1:0},${isPatch?1:0})"`
+        : '';
+
+      cellsHTML += `<div class="${cls}" ${clickAttr}>
+        <span class="day-num">${d}</span>
+        ${dots.length?'<div class="dots">'+dots.join('')+'</div>':''}
+      </div>`;
+    }
+
+    const card = document.createElement('div');
+    card.className = `month-card ${mo.status}`;
+    card.innerHTML = `
+      <div class="month-header">
+        <span>${mo.name} 2026</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="month-status-badge">${isDone?'✓ Listo':'⏳ Pendiente'}</span>
+          <button onclick="toggleMonth(${mo.m})" style="
+            background:${isDone?'rgba(239,68,68,0.18)':'rgba(16,185,129,0.18)'};
+            border:none;border-radius:6px;padding:3px 9px;cursor:pointer;
+            font-size:0.68rem;font-weight:700;
+            color:${isDone?'#b91c1c':'#065f46'};
+            transition:all 0.2s;
+          " title="${isDone?'Marcar como pendiente':'Marcar como completado'}">
+            ${isDone?'↩ Revertir':'✓ Completar'}
+          </button>
+        </div>
+      </div>
+      <div class="mini-cal">
+        <div class="day-names">
+          ${DOW_NAMES.map((n,i)=>`<span class="day-name${i>=5?' weekend':''}">${n}</span>`).join('')}
+        </div>
+        <div class="days-grid">${cellsHTML}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────
+function openModal(mNum, day, isPT, isPatch){
+  const mo = MONTHS.find(x=>x.m===mNum);
+  const monthName = MONTH_NAMES_ES[mNum-1];
+  const dayStr = `${day} de ${monthName} de 2026`;
+
+  document.getElementById('modal-title').textContent =
+    isPT && isPatch ? `Eventos — ${dayStr}` :
+    isPT  ? `Patch Tuesday — ${dayStr}` :
+            `Ventana de Parcheo — ${dayStr}`;
+  document.getElementById('modal-sub').textContent =
+    isPT && !isPatch ? 'Microsoft publica las actualizaciones de seguridad' :
+    isPatch ? `Ventana de mantenimiento a las 18:00 hs — 28 servidores` :
+    'Evento de parcheo';
+
+  let body = '';
+
+  if(isPT){
+    body += `
+    <div class="ev-row r-pt">
+      <span class="ev-row-icon">🔴</span>
+      <div class="ev-row-info">
+        <div class="ev-row-name">Patch Tuesday</div>
+        <div class="ev-row-desc">Microsoft publica el ciclo mensual de parches de seguridad para Windows Server</div>
+        <div class="ev-row-time">📅 ${day} de ${monthName} 2026 — Todo el día</div>
+      </div>
+    </div>`;
+  }
+
+  if(isPatch){
+    const ptDay = mo.pt;
+    body += `
+    <div class="ev-row r-patch">
+      <span class="ev-row-icon">🔵</span>
+      <div class="ev-row-info">
+        <div class="ev-row-name">Instalación de Parches</div>
+        <div class="ev-row-desc">Aplicación de parches Windows en los 28 servidores de desarrollo<br>(${ptDay} de ${monthName} PT + 7 días)</div>
+        <div class="ev-row-time">⏰ ${day} de ${monthName} 2026 — 18:00 hs</div>
+      </div>
+    </div>
+    <div class="ev-row r-reboot">
+      <span class="ev-row-icon">🟡</span>
+      <div class="ev-row-info">
+        <div class="ev-row-name">Reinicio Controlado</div>
+        <div class="ev-row-desc">Reinicio de servidores para aplicar cambios del kernel y parches pendientes</div>
+        <div class="ev-row-time">⏰ ${day} de ${monthName} 2026 — 23:00 hs (madrugada)</div>
+      </div>
+    </div>
+    <div class="ev-row r-report">
+      <span class="ev-row-icon">🟢</span>
+      <div class="ev-row-info">
+        <div class="ev-row-name">Generación de Reporte</div>
+        <div class="ev-row-desc">Generación de reporte CSV con estado de parches y reinicios por servidor</div>
+        <div class="ev-row-time">⏰ ${day} de ${monthName} 2026 — 01:00 hs</div>
+      </div>
+    </div>`;
+
+    body += `
+    <div class="cmd-section">
+      <h4>💻 Comandos Ansible para este ciclo</h4>
+      <div class="cmd-block">
+        <div class="cmd-label">Paso 1 — Instalar Parches (18:00 hs)</div>
+        <div class="cmd-text">ansible-playbook windows_patching.yml \\
+  -i santiago-windows-dev.ini</div>
+        <button class="copy-btn" onclick="cp(this)">Copiar</button>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-label">Paso 2 — Reinicio Controlado (23:00 hs)</div>
+        <div class="cmd-text">ansible-playbook windows_reboot.yml \\
+  -i santiago-windows-dev.ini</div>
+        <button class="copy-btn" onclick="cp(this)">Copiar</button>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-label">Paso 3 — Generar Reporte (01:00 hs)</div>
+        <div class="cmd-text">ansible-playbook windows_patching_report.yml \\
+  -i santiago-windows-dev.ini</div>
+        <button class="copy-btn" onclick="cp(this)">Copiar</button>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('modal-body').innerHTML = body;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e){
+  if(!e || e.target===document.getElementById('modal')){
+    document.getElementById('modal').classList.remove('open');
+  }
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+// ── COMMANDS TAB ──────────────────────────────────────────────────────
+function buildCommands(){
+  const wrap = document.getElementById('cmd-page');
+  wrap.innerHTML = `
+  <div class="cmd-card">
+    <h3>🔧 Flujo Completo de Parcheo</h3>
+    <p>Ejecutar en orden en la ventana de mantenimiento mensual</p>
+    <div class="cmd-block">
+      <div class="cmd-label">Paso 1 — Instalación de parches (18:00 hs)</div>
+      <div class="cmd-text">ansible-playbook windows_patching.yml \
+-i santiago-windows-dev.ini</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Paso 2 — Reinicio controlado (23:00 hs)</div>
+      <div class="cmd-text">ansible-playbook windows_reboot.yml \
+-i santiago-windows-dev.ini</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Paso 3 — Generar reporte CSV (01:00 hs)</div>
+      <div class="cmd-text">ansible-playbook windows_patching_report.yml \
+-i santiago-windows-dev.ini</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+  </div>
+
+  <div class="cmd-card">
+    <h3>🎯 Servidor Específico</h3>
+    <p>Parchear un solo servidor del inventario</p>
+    <div class="cmd-block">
+      <div class="cmd-label">Limitar a un host (--limit)</div>
+      <div class="cmd-text">ansible-playbook windows_patching.yml \
+-i santiago-windows-dev.ini \
+--limit UTP-LIMDEVWSS31</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Dry-run sin aplicar cambios</div>
+      <div class="cmd-text">ansible-playbook windows_patching.yml \
+-i santiago-windows-dev.ini --check</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Ver reportes generados</div>
+      <div class="cmd-text">ls -lrth /home/ansible/roles_geisen/reportes/</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+  </div>
+
+  <div class="cmd-card">
+    <h3>🖥️ Domain Controllers (DC)</h3>
+    <p>Playbooks separados para servidores DC</p>
+    <div class="cmd-block">
+      <div class="cmd-label">Parcheo de Domain Controllers</div>
+      <div class="cmd-text">ansible-playbook windows_patching_dc.yml \
+-i inventario_dc.ini</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Reporte de Domain Controllers</div>
+      <div class="cmd-text">ansible-playbook windows_patching_report_dc.yml \
+-i inventario_dc.ini</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Inventario completo (todos los servidores)</div>
+      <div class="cmd-text">ansible-playbook windows_patching_full.yml \
+-i inventario_full.ini</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+  </div>
+
+  <div class="cmd-card">
+    <h3>⏰ Cron Jobs Automatizados</h3>
+    <p>Agregar al crontab del nodo de control Ansible</p>
+    <div class="cmd-block">
+      <div class="cmd-label">Julio — 21/07/2026 a las 18:00</div>
+      <div class="cmd-text">0 22 21 7 2 ansible-playbook /home/ansible/roles_geisen/windows_patching.yml \
+-i /home/ansible/roles_geisen/santiago-windows-dev.ini \
+>> /home/ansible/logs/patching_$(date +%Y%m%d).log 2>&1</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Agosto — 18/08/2026 a las 18:00</div>
+      <div class="cmd-text">0 22 18 8 2 ansible-playbook /home/ansible/roles_geisen/windows_patching.yml \
+-i /home/ansible/roles_geisen/santiago-windows-dev.ini \
+>> /home/ansible/logs/patching_$(date +%Y%m%d).log 2>&1</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Septiembre — 15/09/2026 a las 18:00</div>
+      <div class="cmd-text">0 22 15 9 2 ansible-playbook /home/ansible/roles_geisen/windows_patching.yml \
+-i /home/ansible/roles_geisen/santiago-windows-dev.ini \
+>> /home/ansible/logs/patching_$(date +%Y%m%d).log 2>&1</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+  </div>
+  `;
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────
+function showTab(name, el){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  el.classList.add('active');
+}
+
+function cp(btn){
+  const txt = btn.previousElementSibling.textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const prev = btn.textContent;
+    btn.textContent='✓ Copiado';
+    btn.style.background='#059669';
+    btn.style.color='white';
+    setTimeout(()=>{btn.textContent=prev;btn.style.background='';btn.style.color='';},2000);
+  }).catch(()=>{
+    // fallback
+    const ta=document.createElement('textarea');
+    ta.value=txt;document.body.appendChild(ta);
+    ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent='✓';setTimeout(()=>btn.textContent='Copiar',1500);
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+loadStatus();
+buildCalendar();
+buildCommands();
+updateStats();
+</script>
+</body>
+</html>
