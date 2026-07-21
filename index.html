@@ -32,7 +32,8 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 .container{max-width:1400px;margin:0 auto;padding:32px 24px;}
 
 /* ── STATS ── */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px;}
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr);}}
 .stat{
   background:white;border-radius:16px;padding:20px 22px;
   box-shadow:0 2px 10px rgba(0,0,0,0.07);
@@ -41,7 +42,7 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 }
 .stat:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.12);}
 .stat.s1{border-color:#2563eb;}.stat.s2{border-color:#10b981;}
-.stat.s3{border-color:#f59e0b;}.stat.s4{border-color:#8b5cf6;}
+.stat.s3{border-color:#f59e0b;}.stat.s4{border-color:#0891b2;}.stat.s5{border-color:#8b5cf6;}
 .stat-icon{font-size:2.2rem;}
 .stat-num{font-size:2rem;font-weight:900;line-height:1;}
 .stat-lbl{font-size:0.72rem;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;margin-top:3px;}
@@ -67,6 +68,7 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 .dot-blue{background:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.2);}
 .dot-yellow{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,0.2);}
 .dot-green{background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,0.2);}
+.dot-purple{background:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,0.2);}
 
 /* ── YEAR CALENDAR GRID ── */
 .cal-year{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
@@ -81,16 +83,42 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 .month-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.13);}
 .month-card.done{border-left:4px solid #10b981;}
 .month-card.pending{border-left:4px solid #3b82f6;}
+.month-card.partial{border-left:4px solid #f59e0b;}
 
 .month-header{
-  padding:12px 14px;font-size:0.95rem;font-weight:800;
-  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px 15px;
+  display:flex;flex-direction:column;gap:10px;
 }
 .month-card.done .month-header{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;}
 .month-card.pending .month-header{background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1e40af;}
-.month-status-badge{font-size:0.68rem;font-weight:700;padding:2px 9px;border-radius:99px;}
-.month-card.done .month-status-badge{background:rgba(16,185,129,0.25);color:#065f46;}
-.month-card.pending .month-status-badge{background:rgba(59,130,246,0.25);color:#1e40af;}
+.month-card.partial .month-header{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;}
+
+.month-title{
+  display:flex;align-items:center;gap:7px;
+  font-size:1.02rem;font-weight:800;letter-spacing:-0.2px;
+}
+.month-title-icon{font-size:1.05rem;line-height:1;}
+
+.status-pills{display:flex;gap:7px;}
+.status-pill{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+  padding:7px 6px;border:none;border-radius:10px;cursor:pointer;
+  font-size:0.7rem;font-weight:700;white-space:nowrap;
+  transition:transform 0.15s,box-shadow 0.15s,background 0.2s;
+  box-shadow:0 1px 2px rgba(0,0,0,0.04);
+}
+.status-pill:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,0.12);}
+.status-pill:active{transform:translateY(0);}
+.status-pill .pill-icon{font-size:0.85rem;}
+.status-pill .pill-label{opacity:0.85;font-weight:600;}
+.status-pill .pill-state{
+  margin-left:1px;font-size:0.68rem;font-weight:800;
+  padding:1px 6px;border-radius:99px;background:rgba(255,255,255,0.55);
+}
+.status-pill.is-done{background:rgba(16,185,129,0.22);color:#065f46;}
+.status-pill.is-done .pill-state{background:rgba(16,185,129,0.35);}
+.status-pill.is-pending{background:rgba(255,255,255,0.55);color:#1e40af;}
+.status-pill.is-pending .pill-state{background:rgba(59,130,246,0.2);}
 
 /* ── MINI CALENDAR GRID ── */
 .mini-cal{padding:10px 10px 12px;}
@@ -133,6 +161,7 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 .ev-dot.blue{background:#3b82f6;}
 .ev-dot.yellow{background:#f59e0b;}
 .ev-dot.green{background:#10b981;}
+.ev-dot.purple{background:#8b5cf6;}
 
 /* ── MODAL ── */
 .modal-overlay{
@@ -176,6 +205,7 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 .ev-row.r-patch{background:#eff6ff;border-left:3px solid #3b82f6;}
 .ev-row.r-reboot{background:#fffbeb;border-left:3px solid #f59e0b;}
 .ev-row.r-report{background:#f0fdf4;border-left:3px solid #10b981;}
+.ev-row.r-prod{background:#f5f3ff;border-left:3px solid #8b5cf6;}
 .ev-row-icon{font-size:1.3rem;}
 .ev-row-info{}
 .ev-row-name{font-size:0.9rem;font-weight:700;color:#111827;}
@@ -222,12 +252,13 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 .pb-fill{height:100%;border-radius:99px;transition:width 1.4s cubic-bezier(.4,0,.2,1);}
 .pb-blue{background:linear-gradient(90deg,#60a5fa,#2563eb);}
 .pb-green{background:linear-gradient(90deg,#34d399,#059669);}
+.pb-purple{background:linear-gradient(90deg,#a78bfa,#7c3aed);}
 </style>
 </head>
 <body>
 <header>
   <h1>🗓️ Calendario de Parcheo Windows 2026 — UTP</h1>
-  <p>Servidores Desarrollo — Lima (Santiago) &nbsp;|&nbsp; Ansible Automation &nbsp;|&nbsp; Patch Tuesday + 7 días</p>
+  <p>Servidores Desarrollo (3er martes, semana exclusiva) y Producción (lun-jue de la semana siguiente) — Lima (Santiago) &nbsp;|&nbsp; Ansible Automation</p>
 </header>
 <div class="container">
 
@@ -236,19 +267,24 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
     <div class="stat s1"><span class="stat-icon">📅</span><div><div class="stat-num">12</div><div class="stat-lbl">Meses Programados</div></div></div>
     <div class="stat s2"><span class="stat-icon">✅</span><div><div class="stat-num" id="stat-done">6</div><div class="stat-lbl">Completados</div></div></div>
     <div class="stat s3"><span class="stat-icon">⏳</span><div><div class="stat-num" id="stat-pend">6</div><div class="stat-lbl">Pendientes</div></div></div>
-    <div class="stat s4"><span class="stat-icon">🖥️</span><div><div class="stat-num">29</div><div class="stat-lbl">Servidores</div></div></div>
+    <div class="stat s4"><span class="stat-icon">🖥️</span><div><div class="stat-num">1</div><div class="stat-lbl">Grupos Desarrollo</div></div></div>
+    <div class="stat s5"><span class="stat-icon">🏭</span><div><div class="stat-num">8</div><div class="stat-lbl">Grupos Producción</div></div></div>
   </div>
 
   <!-- Progress -->
   <div class="progress-wrap">
     <h3>📊 Progreso Anual 2026</h3>
     <div class="pb-row">
-      <div class="pb-labels"><span>Meses parcheados</span><span id="pb-months-lbl">6 / 12 — 50%</span></div>
-      <div class="pb"><div class="pb-fill pb-green" id="pb-months" style="width:50%"></div></div>
+      <div class="pb-labels"><span>🖥️ Meses parcheados — Desarrollo</span><span id="pb-months-dev-lbl">6 / 12 — 50%</span></div>
+      <div class="pb"><div class="pb-fill pb-green" id="pb-months-dev" style="width:50%"></div></div>
     </div>
     <div class="pb-row">
-      <div class="pb-labels"><span>Avance calendario (Junio 2026)</span><span>50%</span></div>
-      <div class="pb"><div class="pb-fill pb-blue" style="width:50%"></div></div>
+      <div class="pb-labels"><span>🏭 Meses parcheados — Producción</span><span id="pb-months-prod-lbl">6 / 12 — 50%</span></div>
+      <div class="pb"><div class="pb-fill pb-purple" id="pb-months-prod" style="width:50%"></div></div>
+    </div>
+    <div class="pb-row">
+      <div class="pb-labels"><span id="pb-overall-lbl-name">Avance calendario</span><span id="pb-overall-lbl">50%</span></div>
+      <div class="pb"><div class="pb-fill pb-blue" id="pb-overall" style="width:50%"></div></div>
     </div>
   </div>
 
@@ -267,6 +303,7 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
       <span class="legend-item"><span class="dot dot-blue"></span> Día de Parcheo (18:00)</span>
       <span class="legend-item"><span class="dot dot-yellow"></span> Reinicio Controlado (23:00)</span>
       <span class="legend-item"><span class="dot dot-green"></span> Generación de Reporte (01:00)</span>
+      <span class="legend-item"><span class="dot dot-purple"></span> Parcheo Producción (8 grupos, semana siguiente a la de desarrollo)</span>
       <span class="legend-item"><span style="display:inline-block;width:14px;height:14px;background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:3px;"></span> Mes completado</span>
       <span class="legend-item"><span style="display:inline-block;width:14px;height:14px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:3px;"></span> Mes pendiente</span>
     </div>
@@ -297,40 +334,76 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 <script>
 // ── DATA ──────────────────────────────────────────────────────────────
 const MONTHS = [
-  {name:'Enero',   abbr:'Ene', m:1,  pt:13, patch:20, status:'done'},
-  {name:'Febrero', abbr:'Feb', m:2,  pt:10, patch:17, status:'done'},
-  {name:'Marzo',   abbr:'Mar', m:3,  pt:10, patch:17, status:'done'},
-  {name:'Abril',   abbr:'Abr', m:4,  pt:14, patch:21, status:'done'},
-  {name:'Mayo',    abbr:'May', m:5,  pt:12, patch:19, status:'done'},
-  {name:'Junio',   abbr:'Jun', m:6,  pt:9,  patch:16, status:'done'},
-  {name:'Julio',   abbr:'Jul', m:7,  pt:14, patch:21, status:'pending'},
-  {name:'Agosto',  abbr:'Ago', m:8,  pt:11, patch:18, status:'pending'},
-  {name:'Septiembre',abbr:'Sep',m:9, pt:8,  patch:15, status:'pending'},
-  {name:'Octubre', abbr:'Oct', m:10, pt:13, patch:20, status:'pending'},
-  {name:'Noviembre',abbr:'Nov',m:11, pt:10, patch:17, status:'pending'},
-  {name:'Diciembre',abbr:'Dic',m:12, pt:8,  patch:15, status:'pending'},
+  {name:'Enero',   abbr:'Ene', m:1,  pt:13, patch:20, statusDev:'done',    statusProd:'done',    prod:[26,27,28,29]},
+  {name:'Febrero', abbr:'Feb', m:2,  pt:10, patch:17, statusDev:'done',    statusProd:'done',    prod:[23,24,25,26]},
+  {name:'Marzo',   abbr:'Mar', m:3,  pt:10, patch:17, statusDev:'done',    statusProd:'done',    prod:[23,24,25,26]},
+  {name:'Abril',   abbr:'Abr', m:4,  pt:14, patch:21, statusDev:'done',    statusProd:'done',    prod:[27,28,29,30]},
+  {name:'Mayo',    abbr:'May', m:5,  pt:12, patch:19, statusDev:'done',    statusProd:'done',    prod:[25,26,27,28]},
+  {name:'Junio',   abbr:'Jun', m:6,  pt:9,  patch:16, statusDev:'done',    statusProd:'done',    prod:[22,23,24,25]},
+  {name:'Julio',   abbr:'Jul', m:7,  pt:14, patch:21, statusDev:'pending', statusProd:'pending', prod:[27,28,29,30]},
+  {name:'Agosto',  abbr:'Ago', m:8,  pt:11, patch:18, statusDev:'pending', statusProd:'pending', prod:[24,25,26,27]},
+  {name:'Septiembre',abbr:'Sep',m:9, pt:8,  patch:15, statusDev:'pending', statusProd:'pending', prod:[21,22,23,24]},
+  {name:'Octubre', abbr:'Oct', m:10, pt:13, patch:20, statusDev:'pending', statusProd:'pending', prod:[26,27,28,29]},
+  {name:'Noviembre',abbr:'Nov',m:11, pt:10, patch:17, statusDev:'pending', statusProd:'pending', prod:[23,24,25,26]},
+  {name:'Diciembre',abbr:'Dic',m:12, pt:8,  patch:15, statusDev:'pending', statusProd:'pending', prod:[21,22,23,24]},
 ];
+
+// 8 grupos de servidores de producción, repartidos 2 por día en
+// lunes-jueves de la SEMANA SIGUIENTE a la del tercer martes (día "patch",
+// exclusivo de desarrollo). Así producción nunca comparte ni una sola
+// semana con el ciclo de desarrollo, y siempre caen 4 días hábiles dentro
+// del mismo mes, sin fines de semana.
+const PROD_GROUPS = ['Grupo 1','Grupo 2','Grupo 3','Grupo 4','Grupo 5','Grupo 6','Grupo 7','Grupo 8'];
+
+function prodGroupsByDay(prodDays){
+  const map = {};
+  const n = prodDays.length;
+  const per = Math.ceil(PROD_GROUPS.length / n);
+  prodDays.forEach((d,i)=>{
+    map[d] = PROD_GROUPS.slice(i*per, Math.min((i+1)*per, PROD_GROUPS.length));
+  });
+  return map;
+}
 
 // ── PERSISTENCIA EN LOCALSTORAGE ──────────────────────────────────────
 function loadStatus() {
-  const saved = localStorage.getItem('utp_patch_2026');
+  const saved = localStorage.getItem('utp_patch_2026_v2');
   if (saved) {
     const data = JSON.parse(saved);
     MONTHS.forEach(m => {
-      if (data[m.m] !== undefined) m.status = data[m.m];
+      if (data.dev && data.dev[m.m] !== undefined) m.statusDev = data.dev[m.m];
+      if (data.prod && data.prod[m.m] !== undefined) m.statusProd = data.prod[m.m];
+    });
+    return;
+  }
+  // Migración desde la versión anterior (un solo estado por mes)
+  const legacy = localStorage.getItem('utp_patch_2026');
+  if (legacy) {
+    const data = JSON.parse(legacy);
+    MONTHS.forEach(m => {
+      if (data[m.m] !== undefined) { m.statusDev = data[m.m]; m.statusProd = data[m.m]; }
     });
   }
 }
 
 function saveStatus() {
-  const data = {};
-  MONTHS.forEach(m => data[m.m] = m.status);
-  localStorage.setItem('utp_patch_2026', JSON.stringify(data));
+  const data = { dev:{}, prod:{} };
+  MONTHS.forEach(m => { data.dev[m.m] = m.statusDev; data.prod[m.m] = m.statusProd; });
+  localStorage.setItem('utp_patch_2026_v2', JSON.stringify(data));
 }
 
-function toggleMonth(mNum) {
+// Cada toggle solo actualiza SU PROPIO grupo (desarrollo o producción);
+// el otro grupo no se ve afectado.
+function toggleDev(mNum) {
   const mo = MONTHS.find(x => x.m === mNum);
-  mo.status = mo.status === 'done' ? 'pending' : 'done';
+  mo.statusDev = mo.statusDev === 'done' ? 'pending' : 'done';
+  saveStatus();
+  rebuildAll();
+}
+
+function toggleProd(mNum) {
+  const mo = MONTHS.find(x => x.m === mNum);
+  mo.statusProd = mo.statusProd === 'done' ? 'pending' : 'done';
   saveStatus();
   rebuildAll();
 }
@@ -342,13 +415,26 @@ function rebuildAll() {
 }
 
 function updateStats() {
-  const done = MONTHS.filter(m => m.status === 'done').length;
-  const pend = MONTHS.filter(m => m.status === 'pending').length;
-  document.getElementById('stat-done').textContent = done;
-  document.getElementById('stat-pend').textContent = pend;
-  const pct = Math.round((done / 12) * 100);
-  document.getElementById('pb-months').style.width = pct + '%';
-  document.getElementById('pb-months-lbl').textContent = done + ' / 12 — ' + pct + '%';
+  const doneDev  = MONTHS.filter(m => m.statusDev  === 'done').length;
+  const pendDev  = 12 - doneDev;
+  const doneProd = MONTHS.filter(m => m.statusProd === 'done').length;
+
+  // Los contadores superiores (Completados/Pendientes) reflejan Desarrollo
+  document.getElementById('stat-done').textContent = doneDev;
+  document.getElementById('stat-pend').textContent = pendDev;
+
+  const pctDev = Math.round((doneDev / 12) * 100);
+  document.getElementById('pb-months-dev').style.width = pctDev + '%';
+  document.getElementById('pb-months-dev-lbl').textContent = doneDev + ' / 12 — ' + pctDev + '%';
+
+  const pctProd = Math.round((doneProd / 12) * 100);
+  document.getElementById('pb-months-prod').style.width = pctProd + '%';
+  document.getElementById('pb-months-prod-lbl').textContent = doneProd + ' / 12 — ' + pctProd + '%';
+
+  // Avance calendario = promedio de Desarrollo y Producción
+  const pctOverall = Math.round((pctDev + pctProd) / 2);
+  document.getElementById('pb-overall').style.width = pctOverall + '%';
+  document.getElementById('pb-overall-lbl').textContent = pctOverall + '%';
 }
 const DOW_NAMES = ['L','M','X','J','V','S','D'];
 const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -365,7 +451,6 @@ function buildCalendar(){
   MONTHS.forEach(mo => {
     const days  = dim(2026, mo.m);
     const start = dow(2026, mo.m, 1); // 0=Mon
-    const isDone = mo.status==='done';
 
     let cellsHTML = '';
     // empty cells before day 1
@@ -376,6 +461,7 @@ function buildCalendar(){
       const isWeekend = dw>=5;
       const isPT    = d===mo.pt;
       const isPatch = d===mo.patch;
+      const isProd  = !!(mo.prod && mo.prod.includes(d));
       const dots    = [];
       if(isPT)    dots.push('<span class="ev-dot red"></span>');
       if(isPatch){
@@ -383,7 +469,8 @@ function buildCalendar(){
         dots.push('<span class="ev-dot yellow"></span>');
         dots.push('<span class="ev-dot green"></span>');
       }
-      const hasEv = isPT||isPatch;
+      if(isProd) dots.push('<span class="ev-dot purple"></span>');
+      const hasEv = isPT||isPatch||isProd;
       const cls = [
         'day-cell',
         isWeekend?'weekend-day':'',
@@ -391,7 +478,7 @@ function buildCalendar(){
       ].filter(Boolean).join(' ');
 
       const clickAttr = hasEv
-        ? `onclick="openModal(${mo.m},${d},${isPT?1:0},${isPatch?1:0})"`
+        ? `onclick="openModal(${mo.m},${d},${isPT?1:0},${isPatch?1:0},${isProd?1:0})"`
         : '';
 
       cellsHTML += `<div class="${cls}" ${clickAttr}>
@@ -400,21 +487,25 @@ function buildCalendar(){
       </div>`;
     }
 
+    const isDevDone  = mo.statusDev  === 'done';
+    const isProdDone = mo.statusProd === 'done';
+    const combined = (isDevDone && isProdDone) ? 'done' : (!isDevDone && !isProdDone) ? 'pending' : 'partial';
+
     const card = document.createElement('div');
-    card.className = `month-card ${mo.status}`;
+    card.className = `month-card ${combined}`;
     card.innerHTML = `
       <div class="month-header">
-        <span>${mo.name} 2026</span>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span class="month-status-badge">${isDone?'✓ Listo':'⏳ Pendiente'}</span>
-          <button onclick="toggleMonth(${mo.m})" style="
-            background:${isDone?'rgba(239,68,68,0.18)':'rgba(16,185,129,0.18)'};
-            border:none;border-radius:6px;padding:3px 9px;cursor:pointer;
-            font-size:0.68rem;font-weight:700;
-            color:${isDone?'#b91c1c':'#065f46'};
-            transition:all 0.2s;
-          " title="${isDone?'Marcar como pendiente':'Marcar como completado'}">
-            ${isDone?'↩ Revertir':'✓ Completar'}
+        <div class="month-title"><span class="month-title-icon">🗓️</span><span>${mo.name} 2026</span></div>
+        <div class="status-pills">
+          <button class="status-pill ${isDevDone?'is-done':'is-pending'}" onclick="toggleDev(${mo.m})"
+            title="${isDevDone?'Marcar Desarrollo como pendiente':'Marcar Desarrollo como completado'}">
+            <span class="pill-icon">🖥️</span><span class="pill-label">Desarrollo</span>
+            <span class="pill-state">${isDevDone?'✓':'⏳'}</span>
+          </button>
+          <button class="status-pill ${isProdDone?'is-done':'is-pending'}" onclick="toggleProd(${mo.m})"
+            title="${isProdDone?'Marcar Producción como pendiente':'Marcar Producción como completado'}">
+            <span class="pill-icon">🏭</span><span class="pill-label">Producción</span>
+            <span class="pill-state">${isProdDone?'✓':'⏳'}</span>
           </button>
         </div>
       </div>
@@ -429,18 +520,22 @@ function buildCalendar(){
 }
 
 // ── MODAL ─────────────────────────────────────────────────────────────
-function openModal(mNum, day, isPT, isPatch){
+function openModal(mNum, day, isPT, isPatch, isProd){
   const mo = MONTHS.find(x=>x.m===mNum);
   const monthName = MONTH_NAMES_ES[mNum-1];
   const dayStr = `${day} de ${monthName} de 2026`;
+  const prodGroups = isProd ? (prodGroupsByDay(mo.prod)[day] || []) : [];
 
+  const eventCount = [isPT,isPatch,isProd].filter(Boolean).length;
   document.getElementById('modal-title').textContent =
-    isPT && isPatch ? `Eventos — ${dayStr}` :
-    isPT  ? `Patch Tuesday — ${dayStr}` :
-            `Ventana de Parcheo — ${dayStr}`;
+    eventCount > 1 ? `Eventos — ${dayStr}` :
+    isPT    ? `Patch Tuesday — ${dayStr}` :
+    isPatch ? `Ventana de Parcheo — ${dayStr}` :
+              `Parcheo Producción — ${dayStr}`;
   document.getElementById('modal-sub').textContent =
-    isPT && !isPatch ? 'Microsoft publica las actualizaciones de seguridad' :
-    isPatch ? `Ventana de mantenimiento a las 18:00 hs — 29 servidores` :
+    isPT && eventCount===1 ? 'Microsoft publica las actualizaciones de seguridad' :
+    isProd && eventCount===1 ? `Ventana de mantenimiento a las 20:00 hs — ${prodGroups.join(', ')}` :
+    isPatch ? `Ventana de mantenimiento a las 18:00 hs — Grupo Desarrollo (29 servidores)` :
     'Evento de parcheo';
 
   let body = '';
@@ -463,15 +558,15 @@ function openModal(mNum, day, isPT, isPatch){
     <div class="ev-row r-patch">
       <span class="ev-row-icon">🔵</span>
       <div class="ev-row-info">
-        <div class="ev-row-name">Instalación de Parches</div>
-        <div class="ev-row-desc">Aplicación de parches Windows en los 28 servidores de desarrollo<br>(${ptDay} de ${monthName} PT + 7 días)</div>
+        <div class="ev-row-name">Instalación de Parches — Desarrollo</div>
+        <div class="ev-row-desc"><strong>Grupo Desarrollo</strong> — Aplicación de parches Windows en los 28 servidores de desarrollo<br>(${ptDay} de ${monthName} PT + 7 días)</div>
         <div class="ev-row-time">⏰ ${day} de ${monthName} 2026 — 18:00 hs</div>
       </div>
     </div>
     <div class="ev-row r-reboot">
       <span class="ev-row-icon">🟡</span>
       <div class="ev-row-info">
-        <div class="ev-row-name">Reinicio Controlado</div>
+        <div class="ev-row-name">Reinicio Controlado — Desarrollo</div>
         <div class="ev-row-desc">Reinicio de servidores para aplicar cambios del kernel y parches pendientes</div>
         <div class="ev-row-time">⏰ ${day} de ${monthName} 2026 — 23:00 hs (madrugada)</div>
       </div>
@@ -479,7 +574,7 @@ function openModal(mNum, day, isPT, isPatch){
     <div class="ev-row r-report">
       <span class="ev-row-icon">🟢</span>
       <div class="ev-row-info">
-        <div class="ev-row-name">Generación de Reporte</div>
+        <div class="ev-row-name">Generación de Reporte — Desarrollo</div>
         <div class="ev-row-desc">Generación de reporte CSV con estado de parches y reinicios por servidor</div>
         <div class="ev-row-time">⏰ ${day} de ${monthName} 2026 — 01:00 hs</div>
       </div>
@@ -504,6 +599,62 @@ function openModal(mNum, day, isPT, isPatch){
         <div class="cmd-label">Paso 3 — Generar Reporte (01:00 hs)</div>
         <div class="cmd-text">ansible-playbook windows_patching_report.yml \\
   -i santiago-windows-dev.ini</div>
+        <button class="copy-btn" onclick="cp(this)">Copiar</button>
+      </div>
+    </div>`;
+  }
+
+  if(isProd){
+    body += `
+    <div class="ev-row r-patch">
+      <span class="ev-row-icon">🔵</span>
+      <div class="ev-row-info">
+        <div class="ev-row-name">Instalación de Parches — Producción</div>
+        <div class="ev-row-desc">Aplicación de parches Windows en servidores de producción<br>${prodGroups.join(', ')} (semana siguiente a la de desarrollo, sin fines de semana)</div>
+        <div class="ev-row-time">⏰ ${day} de ${monthName} 2026 — 20:00 hs</div>
+      </div>
+    </div>
+    <div class="ev-row r-reboot">
+      <span class="ev-row-icon">🟡</span>
+      <div class="ev-row-info">
+        <div class="ev-row-name">Reinicio Controlado — Producción</div>
+        <div class="ev-row-desc">Reinicio de servidores para aplicar cambios del kernel y parches pendientes</div>
+        <div class="ev-row-time">⏰ ${day} de ${monthName} 2026 — 00:00 hs (madrugada)</div>
+      </div>
+    </div>
+    <div class="ev-row r-report">
+      <span class="ev-row-icon">🟢</span>
+      <div class="ev-row-info">
+        <div class="ev-row-name">Generación de Reporte — Producción</div>
+        <div class="ev-row-desc">Generación de reporte CSV con estado de parches y reinicios por servidor</div>
+        <div class="ev-row-time">⏰ ${day} de ${monthName} 2026 — 02:00 hs</div>
+      </div>
+    </div>`;
+
+    body += `
+    <div class="cmd-section">
+      <h4>💻 Comandos Ansible — Producción (${prodGroups.join(', ')})</h4>`;
+    prodGroups.forEach(g=>{
+      const slug = g.toLowerCase().replace(' ','');
+      body += `
+      <div class="cmd-block">
+        <div class="cmd-label">${g} — Instalar Parches (20:00 hs)</div>
+        <div class="cmd-text">ansible-playbook windows_patching.yml \\
+  -i santiago-windows-prod.ini --limit ${slug}</div>
+        <button class="copy-btn" onclick="cp(this)">Copiar</button>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-label">${g} — Reinicio Controlado (00:00 hs)</div>
+        <div class="cmd-text">ansible-playbook windows_reboot.yml \\
+  -i santiago-windows-prod.ini --limit ${slug}</div>
+        <button class="copy-btn" onclick="cp(this)">Copiar</button>
+      </div>`;
+    });
+    body += `
+      <div class="cmd-block">
+        <div class="cmd-label">Reporte consolidado del día (02:00 hs)</div>
+        <div class="cmd-text">ansible-playbook windows_patching_report.yml \\
+  -i santiago-windows-prod.ini</div>
         <button class="copy-btn" onclick="cp(this)">Copiar</button>
       </div>
     </div>`;
@@ -594,6 +745,38 @@ function buildCommands(){
   </div>
 
   <div class="cmd-card">
+    <h3>🏭 Servidores de Producción (8 Grupos)</h3>
+    <p>Últimos 4 días hábiles de la semana 4 · 2 grupos por día</p>
+    <div class="cmd-block">
+      <div class="cmd-label">Instalar parches — grupo específico (--limit)</div>
+      <div class="cmd-text">ansible-playbook windows_patching.yml \
+-i santiago-windows-prod.ini \
+--limit grupo1</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Reinicio controlado — grupo específico</div>
+      <div class="cmd-text">ansible-playbook windows_reboot.yml \
+-i santiago-windows-prod.ini \
+--limit grupo1</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Dry-run sin aplicar cambios (--check)</div>
+      <div class="cmd-text">ansible-playbook windows_patching.yml \
+-i santiago-windows-prod.ini \
+--limit grupo1 --check</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Reporte consolidado de producción</div>
+      <div class="cmd-text">ansible-playbook windows_patching_report.yml \
+-i santiago-windows-prod.ini</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+  </div>
+
+  <div class="cmd-card">
     <h3>⏰ Cron Jobs Automatizados</h3>
     <p>Agregar al crontab del nodo de control Ansible</p>
     <div class="cmd-block">
@@ -655,3 +838,4 @@ updateStats();
 </script>
 </body>
 </html>
+
