@@ -32,7 +32,8 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 .container{max-width:1400px;margin:0 auto;padding:32px 24px;}
 
 /* ── STATS ── */
-.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px;}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-bottom:24px;}
+@media(max-width:1200px){.stats{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr);}}
 .stat{
   background:white;border-radius:16px;padding:20px 22px;
@@ -42,7 +43,7 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 }
 .stat:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.12);}
 .stat.s1{border-color:#2563eb;}.stat.s2{border-color:#10b981;}
-.stat.s3{border-color:#f59e0b;}.stat.s4{border-color:#0891b2;}.stat.s5{border-color:#8b5cf6;}
+.stat.s3{border-color:#f59e0b;}.stat.s4{border-color:#0891b2;}.stat.s5{border-color:#8b5cf6;}.stat.s6{border-color:#f97316;}
 .stat-icon{font-size:2.2rem;}
 .stat-num{font-size:2rem;font-weight:900;line-height:1;}
 .stat-lbl{font-size:0.72rem;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;margin-top:3px;}
@@ -69,6 +70,7 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 .dot-yellow{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,0.2);}
 .dot-green{background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,0.2);}
 .dot-purple{background:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,0.2);}
+.dot-orange{background:#f97316;box-shadow:0 0 0 3px rgba(249,115,22,0.2);}
 
 /* ── YEAR CALENDAR GRID ── */
 .cal-year{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
@@ -99,14 +101,16 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 }
 .month-title-icon{font-size:1.05rem;line-height:1;}
 
-.status-pills{display:flex;gap:7px;}
+.status-pills{display:flex;gap:5px;flex-wrap:wrap;}
 .status-pill{
-  flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
-  padding:7px 6px;border:none;border-radius:10px;cursor:pointer;
-  font-size:0.7rem;font-weight:700;white-space:nowrap;
+  flex:1;display:flex;align-items:center;justify-content:center;gap:3px;
+  padding:6px 4px;border:none;border-radius:10px;cursor:pointer;
+  font-size:0.62rem;font-weight:700;white-space:nowrap;overflow:hidden;
   transition:transform 0.15s,box-shadow 0.15s,background 0.2s;
   box-shadow:0 1px 2px rgba(0,0,0,0.04);
+  min-width:0;
 }
+.status-pill .pill-label{overflow:hidden;text-overflow:ellipsis;}
 .status-pill:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,0.12);}
 .status-pill:active{transform:translateY(0);}
 .status-pill .pill-icon{font-size:0.85rem;}
@@ -162,6 +166,7 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 .ev-dot.yellow{background:#f59e0b;}
 .ev-dot.green{background:#10b981;}
 .ev-dot.purple{background:#8b5cf6;}
+.ev-dot.orange{background:#f97316;}
 
 /* ── MODAL ── */
 .modal-overlay{
@@ -206,6 +211,7 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 .ev-row.r-reboot{background:#fffbeb;border-left:3px solid #f59e0b;}
 .ev-row.r-report{background:#f0fdf4;border-left:3px solid #10b981;}
 .ev-row.r-prod{background:#f5f3ff;border-left:3px solid #8b5cf6;}
+.ev-row.r-onprem{background:#fff7ed;border-left:3px solid #f97316;}
 .ev-row-icon{font-size:1.3rem;}
 .ev-row-info{}
 .ev-row-name{font-size:0.9rem;font-weight:700;color:#111827;}
@@ -253,6 +259,7 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 .pb-blue{background:linear-gradient(90deg,#60a5fa,#2563eb);}
 .pb-green{background:linear-gradient(90deg,#34d399,#059669);}
 .pb-purple{background:linear-gradient(90deg,#a78bfa,#7c3aed);}
+.pb-orange{background:linear-gradient(90deg,#fb923c,#ea580c);}
 </style>
 </head>
 <body>
@@ -268,6 +275,7 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
     <div class="stat s2"><span class="stat-icon">✅</span><div><div class="stat-num" id="stat-done">6</div><div class="stat-lbl">Completados</div></div></div>
     <div class="stat s3"><span class="stat-icon">⏳</span><div><div class="stat-num" id="stat-pend">6</div><div class="stat-lbl">Pendientes</div></div></div>
     <div class="stat s4"><span class="stat-icon">🖥️</span><div><div class="stat-num">1</div><div class="stat-lbl">Grupos Desarrollo</div></div></div>
+    <div class="stat s6"><span class="stat-icon">🏢</span><div><div class="stat-num">1</div><div class="stat-lbl">Grupos Onpremise</div></div></div>
     <div class="stat s5"><span class="stat-icon">🏭</span><div><div class="stat-num">8</div><div class="stat-lbl">Grupos Producción</div></div></div>
   </div>
 
@@ -277,6 +285,10 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
     <div class="pb-row">
       <div class="pb-labels"><span>🖥️ Meses parcheados — Desarrollo</span><span id="pb-months-dev-lbl">6 / 12 — 50%</span></div>
       <div class="pb"><div class="pb-fill pb-green" id="pb-months-dev" style="width:50%"></div></div>
+    </div>
+    <div class="pb-row">
+      <div class="pb-labels"><span>🏢 Meses parcheados — Onpremise</span><span id="pb-months-onprem-lbl">6 / 12 — 50%</span></div>
+      <div class="pb"><div class="pb-fill pb-orange" id="pb-months-onprem" style="width:50%"></div></div>
     </div>
     <div class="pb-row">
       <div class="pb-labels"><span>🏭 Meses parcheados — Producción</span><span id="pb-months-prod-lbl">6 / 12 — 50%</span></div>
@@ -303,6 +315,7 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
       <span class="legend-item"><span class="dot dot-blue"></span> Día de Parcheo (18:00)</span>
       <span class="legend-item"><span class="dot dot-yellow"></span> Reinicio Controlado (23:00)</span>
       <span class="legend-item"><span class="dot dot-green"></span> Generación de Reporte (01:00)</span>
+      <span class="legend-item"><span class="dot dot-orange"></span> Parcheo Onpremise (3 días después del parcheo de Desarrollo)</span>
       <span class="legend-item"><span class="dot dot-purple"></span> Parcheo Producción (8 grupos, semana siguiente a la de desarrollo)</span>
       <span class="legend-item"><span style="display:inline-block;width:14px;height:14px;background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:3px;"></span> Mes completado</span>
       <span class="legend-item"><span style="display:inline-block;width:14px;height:14px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:3px;"></span> Mes pendiente</span>
@@ -334,19 +347,23 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
 <script>
 // ── DATA ──────────────────────────────────────────────────────────────
 const MONTHS = [
-  {name:'Enero',   abbr:'Ene', m:1,  pt:13, patch:20, statusDev:'done',    statusProd:'done',    prod:[26,27,28,29]},
-  {name:'Febrero', abbr:'Feb', m:2,  pt:10, patch:17, statusDev:'done',    statusProd:'done',    prod:[23,24,25,26]},
-  {name:'Marzo',   abbr:'Mar', m:3,  pt:10, patch:17, statusDev:'done',    statusProd:'done',    prod:[23,24,25,26]},
-  {name:'Abril',   abbr:'Abr', m:4,  pt:14, patch:21, statusDev:'done',    statusProd:'done',    prod:[27,28,29,30]},
-  {name:'Mayo',    abbr:'May', m:5,  pt:12, patch:19, statusDev:'done',    statusProd:'done',    prod:[25,26,27,28]},
-  {name:'Junio',   abbr:'Jun', m:6,  pt:9,  patch:16, statusDev:'done',    statusProd:'done',    prod:[22,23,24,25]},
-  {name:'Julio',   abbr:'Jul', m:7,  pt:14, patch:21, statusDev:'pending', statusProd:'pending', prod:[27,28,29,30]},
-  {name:'Agosto',  abbr:'Ago', m:8,  pt:11, patch:18, statusDev:'pending', statusProd:'pending', prod:[24,25,26,27]},
-  {name:'Septiembre',abbr:'Sep',m:9, pt:8,  patch:15, statusDev:'pending', statusProd:'pending', prod:[21,22,23,24]},
-  {name:'Octubre', abbr:'Oct', m:10, pt:13, patch:20, statusDev:'pending', statusProd:'pending', prod:[26,27,28,29]},
-  {name:'Noviembre',abbr:'Nov',m:11, pt:10, patch:17, statusDev:'pending', statusProd:'pending', prod:[23,24,25,26]},
-  {name:'Diciembre',abbr:'Dic',m:12, pt:8,  patch:15, statusDev:'pending', statusProd:'pending', prod:[21,22,23,24]},
+  {name:'Enero',   abbr:'Ene', m:1,  pt:13, patch:20, statusDev:'done',    statusOnprem:'done',    statusProd:'done',    prod:[26,27,28,29]},
+  {name:'Febrero', abbr:'Feb', m:2,  pt:10, patch:17, statusDev:'done',    statusOnprem:'done',    statusProd:'done',    prod:[23,24,25,26]},
+  {name:'Marzo',   abbr:'Mar', m:3,  pt:10, patch:17, statusDev:'done',    statusOnprem:'done',    statusProd:'done',    prod:[23,24,25,26]},
+  {name:'Abril',   abbr:'Abr', m:4,  pt:14, patch:21, statusDev:'done',    statusOnprem:'done',    statusProd:'done',    prod:[27,28,29,30]},
+  {name:'Mayo',    abbr:'May', m:5,  pt:12, patch:19, statusDev:'done',    statusOnprem:'done',    statusProd:'done',    prod:[25,26,27,28]},
+  {name:'Junio',   abbr:'Jun', m:6,  pt:9,  patch:16, statusDev:'done',    statusOnprem:'done',    statusProd:'done',    prod:[22,23,24,25]},
+  {name:'Julio',   abbr:'Jul', m:7,  pt:14, patch:21, statusDev:'pending', statusOnprem:'pending', statusProd:'pending', prod:[27,28,29,30]},
+  {name:'Agosto',  abbr:'Ago', m:8,  pt:11, patch:18, statusDev:'pending', statusOnprem:'pending', statusProd:'pending', prod:[24,25,26,27]},
+  {name:'Septiembre',abbr:'Sep',m:9, pt:8,  patch:15, statusDev:'pending', statusOnprem:'pending', statusProd:'pending', prod:[21,22,23,24]},
+  {name:'Octubre', abbr:'Oct', m:10, pt:13, patch:20, statusDev:'pending', statusOnprem:'pending', statusProd:'pending', prod:[26,27,28,29]},
+  {name:'Noviembre',abbr:'Nov',m:11, pt:10, patch:17, statusDev:'pending', statusOnprem:'pending', statusProd:'pending', prod:[23,24,25,26]},
+  {name:'Diciembre',abbr:'Dic',m:12, pt:8,  patch:15, statusDev:'pending', statusOnprem:'pending', statusProd:'pending', prod:[21,22,23,24]},
 ];
+
+// Onpremise = los 3 días hábiles/consecutivos siguientes al día de parcheo
+// de Desarrollo (patch+1, patch+2, patch+3), dentro del mismo mes.
+function onpremDays(mo){ return [mo.patch+1, mo.patch+2, mo.patch+3]; }
 
 // 8 grupos de servidores de producción, repartidos 2 por día en
 // lunes-jueves de la SEMANA SIGUIENTE a la del tercer martes (día "patch",
@@ -367,36 +384,54 @@ function prodGroupsByDay(prodDays){
 
 // ── PERSISTENCIA EN LOCALSTORAGE ──────────────────────────────────────
 function loadStatus() {
-  const saved = localStorage.getItem('utp_patch_2026_v2');
+  const saved = localStorage.getItem('utp_patch_2026_v3');
   if (saved) {
     const data = JSON.parse(saved);
     MONTHS.forEach(m => {
       if (data.dev && data.dev[m.m] !== undefined) m.statusDev = data.dev[m.m];
+      if (data.onprem && data.onprem[m.m] !== undefined) m.statusOnprem = data.onprem[m.m];
       if (data.prod && data.prod[m.m] !== undefined) m.statusProd = data.prod[m.m];
     });
     return;
   }
-  // Migración desde la versión anterior (un solo estado por mes)
+  // Migración desde la versión anterior (dev/prod sin onprem)
+  const prev = localStorage.getItem('utp_patch_2026_v2');
+  if (prev) {
+    const data = JSON.parse(prev);
+    MONTHS.forEach(m => {
+      if (data.dev && data.dev[m.m] !== undefined) { m.statusDev = data.dev[m.m]; m.statusOnprem = data.dev[m.m]; }
+      if (data.prod && data.prod[m.m] !== undefined) m.statusProd = data.prod[m.m];
+    });
+    return;
+  }
+  // Migración desde la versión más antigua (un solo estado por mes)
   const legacy = localStorage.getItem('utp_patch_2026');
   if (legacy) {
     const data = JSON.parse(legacy);
     MONTHS.forEach(m => {
-      if (data[m.m] !== undefined) { m.statusDev = data[m.m]; m.statusProd = data[m.m]; }
+      if (data[m.m] !== undefined) { m.statusDev = data[m.m]; m.statusOnprem = data[m.m]; m.statusProd = data[m.m]; }
     });
   }
 }
 
 function saveStatus() {
-  const data = { dev:{}, prod:{} };
-  MONTHS.forEach(m => { data.dev[m.m] = m.statusDev; data.prod[m.m] = m.statusProd; });
-  localStorage.setItem('utp_patch_2026_v2', JSON.stringify(data));
+  const data = { dev:{}, onprem:{}, prod:{} };
+  MONTHS.forEach(m => { data.dev[m.m] = m.statusDev; data.onprem[m.m] = m.statusOnprem; data.prod[m.m] = m.statusProd; });
+  localStorage.setItem('utp_patch_2026_v3', JSON.stringify(data));
 }
 
-// Cada toggle solo actualiza SU PROPIO grupo (desarrollo o producción);
-// el otro grupo no se ve afectado.
+// Cada toggle solo actualiza SU PROPIO grupo (desarrollo, onpremise o producción);
+// los demás grupos no se ven afectados.
 function toggleDev(mNum) {
   const mo = MONTHS.find(x => x.m === mNum);
   mo.statusDev = mo.statusDev === 'done' ? 'pending' : 'done';
+  saveStatus();
+  rebuildAll();
+}
+
+function toggleOnprem(mNum) {
+  const mo = MONTHS.find(x => x.m === mNum);
+  mo.statusOnprem = mo.statusOnprem === 'done' ? 'pending' : 'done';
   saveStatus();
   rebuildAll();
 }
@@ -417,6 +452,7 @@ function rebuildAll() {
 function updateStats() {
   const doneDev  = MONTHS.filter(m => m.statusDev  === 'done').length;
   const pendDev  = 12 - doneDev;
+  const doneOnprem = MONTHS.filter(m => m.statusOnprem === 'done').length;
   const doneProd = MONTHS.filter(m => m.statusProd === 'done').length;
 
   // Los contadores superiores (Completados/Pendientes) reflejan Desarrollo
@@ -427,12 +463,16 @@ function updateStats() {
   document.getElementById('pb-months-dev').style.width = pctDev + '%';
   document.getElementById('pb-months-dev-lbl').textContent = doneDev + ' / 12 — ' + pctDev + '%';
 
+  const pctOnprem = Math.round((doneOnprem / 12) * 100);
+  document.getElementById('pb-months-onprem').style.width = pctOnprem + '%';
+  document.getElementById('pb-months-onprem-lbl').textContent = doneOnprem + ' / 12 — ' + pctOnprem + '%';
+
   const pctProd = Math.round((doneProd / 12) * 100);
   document.getElementById('pb-months-prod').style.width = pctProd + '%';
   document.getElementById('pb-months-prod-lbl').textContent = doneProd + ' / 12 — ' + pctProd + '%';
 
-  // Avance calendario = promedio de Desarrollo y Producción
-  const pctOverall = Math.round((pctDev + pctProd) / 2);
+  // Avance calendario = promedio de Desarrollo, Onpremise y Producción
+  const pctOverall = Math.round((pctDev + pctOnprem + pctProd) / 3);
   document.getElementById('pb-overall').style.width = pctOverall + '%';
   document.getElementById('pb-overall-lbl').textContent = pctOverall + '%';
 }
@@ -459,9 +499,10 @@ function buildCalendar(){
     for(let d=1;d<=days;d++){
       const dw = (start+d-1)%7;
       const isWeekend = dw>=5;
-      const isPT    = d===mo.pt;
-      const isPatch = d===mo.patch;
-      const isProd  = !!(mo.prod && mo.prod.includes(d));
+      const isPT      = d===mo.pt;
+      const isPatch   = d===mo.patch;
+      const isOnprem  = onpremDays(mo).includes(d);
+      const isProd    = !!(mo.prod && mo.prod.includes(d));
       const dots    = [];
       if(isPT)    dots.push('<span class="ev-dot red"></span>');
       if(isPatch){
@@ -469,8 +510,9 @@ function buildCalendar(){
         dots.push('<span class="ev-dot yellow"></span>');
         dots.push('<span class="ev-dot green"></span>');
       }
+      if(isOnprem) dots.push('<span class="ev-dot orange"></span>');
       if(isProd) dots.push('<span class="ev-dot purple"></span>');
-      const hasEv = isPT||isPatch||isProd;
+      const hasEv = isPT||isPatch||isOnprem||isProd;
       const cls = [
         'day-cell',
         isWeekend?'weekend-day':'',
@@ -478,7 +520,7 @@ function buildCalendar(){
       ].filter(Boolean).join(' ');
 
       const clickAttr = hasEv
-        ? `onclick="openModal(${mo.m},${d},${isPT?1:0},${isPatch?1:0},${isProd?1:0})"`
+        ? `onclick="openModal(${mo.m},${d},${isPT?1:0},${isPatch?1:0},${isOnprem?1:0},${isProd?1:0})"`
         : '';
 
       cellsHTML += `<div class="${cls}" ${clickAttr}>
@@ -487,9 +529,12 @@ function buildCalendar(){
       </div>`;
     }
 
-    const isDevDone  = mo.statusDev  === 'done';
-    const isProdDone = mo.statusProd === 'done';
-    const combined = (isDevDone && isProdDone) ? 'done' : (!isDevDone && !isProdDone) ? 'pending' : 'partial';
+    const isDevDone     = mo.statusDev     === 'done';
+    const isOnpremDone  = mo.statusOnprem  === 'done';
+    const isProdDone    = mo.statusProd    === 'done';
+    const allDone    = isDevDone && isOnpremDone && isProdDone;
+    const allPending = !isDevDone && !isOnpremDone && !isProdDone;
+    const combined = allDone ? 'done' : allPending ? 'pending' : 'partial';
 
     const card = document.createElement('div');
     card.className = `month-card ${combined}`;
@@ -501,6 +546,11 @@ function buildCalendar(){
             title="${isDevDone?'Marcar Desarrollo como pendiente':'Marcar Desarrollo como completado'}">
             <span class="pill-icon">🖥️</span><span class="pill-label">Desarrollo</span>
             <span class="pill-state">${isDevDone?'✓':'⏳'}</span>
+          </button>
+          <button class="status-pill ${isOnpremDone?'is-done':'is-pending'}" onclick="toggleOnprem(${mo.m})"
+            title="${isOnpremDone?'Marcar Onpremise como pendiente':'Marcar Onpremise como completado'}">
+            <span class="pill-icon">🏢</span><span class="pill-label">Onpremise</span>
+            <span class="pill-state">${isOnpremDone?'✓':'⏳'}</span>
           </button>
           <button class="status-pill ${isProdDone?'is-done':'is-pending'}" onclick="toggleProd(${mo.m})"
             title="${isProdDone?'Marcar Producción como pendiente':'Marcar Producción como completado'}">
@@ -520,21 +570,24 @@ function buildCalendar(){
 }
 
 // ── MODAL ─────────────────────────────────────────────────────────────
-function openModal(mNum, day, isPT, isPatch, isProd){
+function openModal(mNum, day, isPT, isPatch, isOnprem, isProd){
   const mo = MONTHS.find(x=>x.m===mNum);
   const monthName = MONTH_NAMES_ES[mNum-1];
   const dayStr = `${day} de ${monthName} de 2026`;
   const prodGroups = isProd ? (prodGroupsByDay(mo.prod)[day] || []) : [];
+  const onpremDayIdx = isOnprem ? onpremDays(mo).indexOf(day) + 1 : 0;
 
-  const eventCount = [isPT,isPatch,isProd].filter(Boolean).length;
+  const eventCount = [isPT,isPatch,isOnprem,isProd].filter(Boolean).length;
   document.getElementById('modal-title').textContent =
     eventCount > 1 ? `Eventos — ${dayStr}` :
-    isPT    ? `Patch Tuesday — ${dayStr}` :
-    isPatch ? `Ventana de Parcheo — ${dayStr}` :
-              `Parcheo Producción — ${dayStr}`;
+    isPT     ? `Patch Tuesday — ${dayStr}` :
+    isPatch  ? `Ventana de Parcheo — ${dayStr}` :
+    isOnprem ? `Parcheo Onpremise — ${dayStr}` :
+               `Parcheo Producción — ${dayStr}`;
   document.getElementById('modal-sub').textContent =
     isPT && eventCount===1 ? 'Microsoft publica las actualizaciones de seguridad' :
     isProd && eventCount===1 ? `Ventana de mantenimiento a las 20:00 hs — ${prodGroups.join(', ')}` :
+    isOnprem && eventCount===1 ? `Ventana de mantenimiento a las 19:00 hs — Grupo Onpremise, día ${onpremDayIdx} de 3` :
     isPatch ? `Ventana de mantenimiento a las 18:00 hs — Grupo Desarrollo (29 servidores)` :
     'Evento de parcheo';
 
@@ -599,6 +652,57 @@ function openModal(mNum, day, isPT, isPatch, isProd){
         <div class="cmd-label">Paso 3 — Generar Reporte (01:00 hs)</div>
         <div class="cmd-text">ansible-playbook windows_patching_report.yml \\
   -i santiago-windows-dev.ini</div>
+        <button class="copy-btn" onclick="cp(this)">Copiar</button>
+      </div>
+    </div>`;
+  }
+
+  if(isOnprem){
+    body += `
+    <div class="ev-row r-onprem">
+      <span class="ev-row-icon">🟠</span>
+      <div class="ev-row-info">
+        <div class="ev-row-name">Instalación de Parches — Onpremise</div>
+        <div class="ev-row-desc"><strong>Grupo Onpremise</strong> — Aplicación de parches Windows en servidores on-premise<br>Día ${onpremDayIdx} de 3 (posterior al parcheo de Desarrollo del ${mo.patch} de ${monthName})</div>
+        <div class="ev-row-time">⏰ ${day} de ${monthName} 2026 — 19:00 hs</div>
+      </div>
+    </div>
+    <div class="ev-row r-reboot">
+      <span class="ev-row-icon">🟡</span>
+      <div class="ev-row-info">
+        <div class="ev-row-name">Reinicio Controlado — Onpremise</div>
+        <div class="ev-row-desc">Reinicio de servidores on-premise para aplicar cambios del kernel y parches pendientes</div>
+        <div class="ev-row-time">⏰ ${day} de ${monthName} 2026 — 22:30 hs (madrugada)</div>
+      </div>
+    </div>
+    <div class="ev-row r-report">
+      <span class="ev-row-icon">🟢</span>
+      <div class="ev-row-info">
+        <div class="ev-row-name">Generación de Reporte — Onpremise</div>
+        <div class="ev-row-desc">Generación de reporte CSV con estado de parches y reinicios por servidor</div>
+        <div class="ev-row-time">⏰ ${day} de ${monthName} 2026 — 00:30 hs</div>
+      </div>
+    </div>`;
+
+    body += `
+    <div class="cmd-section">
+      <h4>💻 Comandos Ansible — Onpremise</h4>
+      <div class="cmd-block">
+        <div class="cmd-label">Paso 1 — Instalar Parches (19:00 hs)</div>
+        <div class="cmd-text">ansible-playbook windows_patching.yml \\
+  -i santiago-windows-onprem.ini</div>
+        <button class="copy-btn" onclick="cp(this)">Copiar</button>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-label">Paso 2 — Reinicio Controlado (22:30 hs)</div>
+        <div class="cmd-text">ansible-playbook windows_reboot.yml \\
+  -i santiago-windows-onprem.ini</div>
+        <button class="copy-btn" onclick="cp(this)">Copiar</button>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-label">Paso 3 — Generar Reporte (00:30 hs)</div>
+        <div class="cmd-text">ansible-playbook windows_patching_report.yml \\
+  -i santiago-windows-onprem.ini</div>
         <button class="copy-btn" onclick="cp(this)">Copiar</button>
       </div>
     </div>`;
@@ -745,6 +849,29 @@ function buildCommands(){
   </div>
 
   <div class="cmd-card">
+    <h3>🏢 Servidores Onpremise</h3>
+    <p>3 días hábiles siguientes al parcheo de Desarrollo</p>
+    <div class="cmd-block">
+      <div class="cmd-label">Paso 1 — Instalación de parches (19:00 hs)</div>
+      <div class="cmd-text">ansible-playbook windows_patching.yml \
+-i santiago-windows-onprem.ini</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Paso 2 — Reinicio controlado (22:30 hs)</div>
+      <div class="cmd-text">ansible-playbook windows_reboot.yml \
+-i santiago-windows-onprem.ini</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-label">Paso 3 — Generar reporte CSV (00:30 hs)</div>
+      <div class="cmd-text">ansible-playbook windows_patching_report.yml \
+-i santiago-windows-onprem.ini</div>
+      <button class="copy-btn" onclick="cp(this)">Copiar</button>
+    </div>
+  </div>
+
+  <div class="cmd-card">
     <h3>🏭 Servidores de Producción (8 Grupos)</h3>
     <p>Últimos 4 días hábiles de la semana 4 · 2 grupos por día</p>
     <div class="cmd-block">
@@ -838,4 +965,3 @@ updateStats();
 </script>
 </body>
 </html>
-
