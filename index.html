@@ -346,7 +346,27 @@ header p{color:rgba(255,255,255,0.82);margin-top:6px;font-size:0.92rem;}
   </div>
 </div>
 
+<!-- Firebase SDK (compat, sin necesidad de bundler) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
+
 <script>
+// ── FIREBASE CONFIG ──────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyDB18HScYWuXCmaW52icTnEU03HT7b2_hE",
+  authDomain: "calendario-parcheo.firebaseapp.com",
+  databaseURL: "https://calendario-parcheo-default-rtdb.firebaseio.com",
+  projectId: "calendario-parcheo",
+  storageBucket: "calendario-parcheo.firebasestorage.app",
+  messagingSenderId: "387915278037",
+  appId: "1:387915278037:web:c450a44d56a00d1bae245c"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const statusRef = db.ref('utp_patch_2026');
+
+let firebaseReady = false; // se pone true tras la primera carga de datos
+
 // ── DATA ──────────────────────────────────────────────────────────────
 const MONTHS = [
   {name:'Enero',   abbr:'Ene', m:1,  pt:13, patch:20, statusDev:'done',    statusOnprem:'done',    statusProd:'done',    prod:[26,27,28,29]},
@@ -398,42 +418,50 @@ function prodGroupsByDay(prodDays){
   return map;
 }
 
-// ── PERSISTENCIA EN LOCALSTORAGE ──────────────────────────────────────
-function loadStatus() {
-  const saved = localStorage.getItem('utp_patch_2026_v3');
-  if (saved) {
-    const data = JSON.parse(saved);
-    MONTHS.forEach(m => {
-      if (data.dev && data.dev[m.m] !== undefined) m.statusDev = data.dev[m.m];
-      if (data.onprem && data.onprem[m.m] !== undefined) m.statusOnprem = data.onprem[m.m];
-      if (data.prod && data.prod[m.m] !== undefined) m.statusProd = data.prod[m.m];
-    });
-    return;
-  }
-  // Migración desde la versión anterior (dev/prod sin onprem)
-  const prev = localStorage.getItem('utp_patch_2026_v2');
-  if (prev) {
-    const data = JSON.parse(prev);
-    MONTHS.forEach(m => {
-      if (data.dev && data.dev[m.m] !== undefined) { m.statusDev = data.dev[m.m]; m.statusOnprem = data.dev[m.m]; }
-      if (data.prod && data.prod[m.m] !== undefined) m.statusProd = data.prod[m.m];
-    });
-    return;
-  }
-  // Migración desde la versión más antigua (un solo estado por mes)
-  const legacy = localStorage.getItem('utp_patch_2026');
-  if (legacy) {
-    const data = JSON.parse(legacy);
-    MONTHS.forEach(m => {
-      if (data[m.m] !== undefined) { m.statusDev = data[m.m]; m.statusOnprem = data[m.m]; m.statusProd = data[m.m]; }
-    });
-  }
+// ── PERSISTENCIA EN FIREBASE (compartida entre todos los equipos) ─────
+// Aplica un objeto {dev:{m:status}, onprem:{...}, prod:{...}} a MONTHS
+function applyStatusData(data) {
+  if (!data) return;
+  MONTHS.forEach(m => {
+    if (data.dev && data.dev[m.m] !== undefined) m.statusDev = data.dev[m.m];
+    if (data.onprem && data.onprem[m.m] !== undefined) m.statusOnprem = data.onprem[m.m];
+    if (data.prod && data.prod[m.m] !== undefined) m.statusProd = data.prod[m.m];
+  });
 }
 
-function saveStatus() {
+function currentStatusData() {
   const data = { dev:{}, onprem:{}, prod:{} };
   MONTHS.forEach(m => { data.dev[m.m] = m.statusDev; data.onprem[m.m] = m.statusOnprem; data.prod[m.m] = m.statusProd; });
-  localStorage.setItem('utp_patch_2026_v3', JSON.stringify(data));
+  return data;
+}
+
+// Escribe el estado actual en Firebase (se propaga a todos los navegadores conectados)
+function saveStatus() {
+  statusRef.set(currentStatusData()).catch(err => {
+    console.error('Error guardando en Firebase:', err);
+    alert('No se pudo guardar el cambio (sin conexión con Firebase). Revisá tu internet e intentá de nuevo.');
+  });
+}
+
+// Escucha cambios en tiempo real: si CUALQUIER navegador modifica el estado,
+// todos los demás se actualizan solos, sin recargar la página.
+function listenStatus() {
+  statusRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      // Ya hay datos guardados en Firebase: usarlos (fuente de verdad compartida)
+      applyStatusData(data);
+    } else if (!firebaseReady) {
+      // Primera vez que se usa la base de datos: subir el estado inicial hardcodeado
+      statusRef.set(currentStatusData());
+    }
+    firebaseReady = true;
+    rebuildAll();
+  }, (err) => {
+    console.error('Error leyendo Firebase:', err);
+    document.getElementById('cal-year').innerHTML =
+      '<p style="padding:20px;color:#ef4444;">⚠️ No se pudo conectar con la base de datos. Verificá tu conexión a internet.</p>';
+  });
 }
 
 // Cada toggle solo actualiza SU PROPIO grupo (desarrollo, onpremise o producción);
@@ -982,10 +1010,9 @@ function cp(btn){
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────
-loadStatus();
-buildCalendar();
+document.getElementById('cal-year').innerHTML = '<p style="padding:20px;color:#6b7280;">Cargando datos compartidos...</p>';
 buildCommands();
-updateStats();
+listenStatus(); // internamente llama a rebuildAll() (buildCalendar + updateStats) cuando llegan los datos
 </script>
 </body>
 </html>
